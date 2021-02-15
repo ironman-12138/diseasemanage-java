@@ -98,6 +98,8 @@ public class CodeGenerator {
         strategy.setRestControllerStyle(true);
         // 驼峰转连字符
         strategy.setControllerMappingHyphenStyle(true);
+        // 忽略表名前缀tb_
+        strategy.setTablePrefix("tb_");
         mpg.setStrategy(strategy);
         mpg.execute();
     }
