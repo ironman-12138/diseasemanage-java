@@ -1,5 +1,6 @@
 package com.xtn.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import java.util.Date;
@@ -70,5 +71,7 @@ public class User implements Serializable {
     @ApiModelProperty(value = "部门id")
     private Long departmentId;
 
-
+    @ApiModelProperty(value = "部门名")
+    @TableField(exist = false)
+    private String name;
 }

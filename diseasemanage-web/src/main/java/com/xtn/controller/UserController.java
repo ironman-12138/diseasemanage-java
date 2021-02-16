@@ -1,12 +1,14 @@
 package com.xtn.controller;
 
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xtn.common.Result;
 import com.xtn.common.ResultCode;
 import com.xtn.common.hander.BusinessException;
 import com.xtn.domain.User;
 import com.xtn.service.UserService;
+import com.xtn.vo.UserVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
@@ -31,19 +33,20 @@ public class UserController {
     private UserService userService;
 
     /**
-     * 分页查询所有用户信息
+     * 根据条件分页查询所有用户信息
      * @return Result
      */
-    @GetMapping(value = "/select")
-    @ApiOperation(value = "用户列表",notes = "分页查询所有用户信息")
-    public Result selectUsers(@RequestParam(required = true,defaultValue = "1") Integer current,
-                              @RequestParam(required = true,defaultValue = "6") Integer size){
+    @PostMapping(value = "/select")
+    @ApiOperation(value = "用户列表",notes = "根据条件分页查询所有用户信息")
+    public Result selectUsers(@RequestParam(required = true,defaultValue = "1") Integer currentPage,
+                              @RequestParam(required = true,defaultValue = "6") Integer pageSize,
+                              @RequestBody UserVo userVo){
 
-        Page<User> userPage = userService.selectUsers(current, size);
+        IPage<User> userList = userService.getUserList(currentPage, pageSize, userVo);
         //获取总记录数
-        long total = userPage.getTotal();
+        long total = userList.getTotal();
         //获取数据
-        List<User> records = userPage.getRecords();
+        List<User> records = userList.getRecords();
         return Result.ok().data("users",records).data("total",total);
     }
 
