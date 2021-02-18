@@ -7,9 +7,9 @@
     </sql>
 
     <select id="getUserList" resultType="com.xtn.domain.User">
-        select <include refid="Base_Column_List"></include>
+        select u.id,username,nickname,email,avatar,phone_number,status,u.create_time,u.modified_time,sex,salt,type,password,birth,department_id,d.name as name
         from tb_user u
-        join tb_deptment d
+        join tb_department d
         on u.department_id=d.id
         ${ew.customSqlSegment}
     </select>
