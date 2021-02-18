@@ -34,7 +34,7 @@ public class AilOssController {
 
     @ApiOperation(value = "删除上传替换之后的头像")
     @PostMapping("/deleteImgFile")
-    public Result deleteImgFile(@RequestBody String file){
+    public Result deleteImgFile(String file){
         //传过来的文件路径样式：https://diseasemanage.oss-cn-hangzhou.aliyuncs.com/2021/02/17/6f3e678106214e00bafdf139ed98abb4.png
         try {
             //只需要2021/02/17/6f3e678106214e00bafdf139ed98abb4.png

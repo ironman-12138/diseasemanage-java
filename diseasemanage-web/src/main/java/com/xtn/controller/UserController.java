@@ -11,6 +11,7 @@ import com.xtn.service.UserService;
 import com.xtn.vo.UserVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -27,6 +28,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 @Api(value = "系统用户模块",tags = "系统用户接口")
+@Slf4j
 public class UserController {
 
     @Resource
@@ -50,6 +52,11 @@ public class UserController {
         return Result.ok().data("users",records).data("total",total);
     }
 
+    /**
+     * 根据id查询用户
+     * @param id 用户id
+     * @return
+     */
     @GetMapping(value = "/selectUser/{id}")
     @ApiOperation(value = "查询指定用户",notes = "根据id查询用户信息")
     public Result selectUserById(@PathVariable("id") Long id){
@@ -57,7 +64,24 @@ public class UserController {
         if (user != null){
             return Result.ok().data("user",user);
         }else {
-            throw  new BusinessException(ResultCode.DATA_ERROR.getCode(),ResultCode.DATA_ERROR.getMessage());
+            throw new BusinessException(ResultCode.DATA_ERROR.getCode(),ResultCode.DATA_ERROR.getMessage());
+        }
+    }
+
+    /**
+     * 添加用户
+     * @param user
+     * @return
+     */
+    @PostMapping(value = "/save")
+    @ApiOperation(value = "添加用户",notes = "添加用户信息")
+    public Result saveUser(@RequestBody User user){
+        try{
+            userService.addUser(user);
+            return Result.ok();
+        }catch (Exception e){
+            log.info("用户添加失败");
+            return Result.error();
         }
     }
 }

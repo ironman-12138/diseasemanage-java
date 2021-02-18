@@ -13,6 +13,8 @@ public enum  ResultCode {
      *         403->没有找到数据
      *         404->服务器异常
      *         405->未知错误，请联系管理员
+     *         406->用户已存在
+     *         407->部门不存在
      */
     SUCCESS(200,"成功"),
     ERROR(400,"失败"),
@@ -21,6 +23,8 @@ public enum  ResultCode {
     DATA_ERROR(403,"没有找到数据"),
     SERVER_ERROR(404,"服务器异常"),
     UNKNOWN_ERROR(405,"未知错误，请联系管理员"),
+    USER_ALREADY_EXISTS(406,"用户已存在"),
+    DEPART_NO_EXISTS(407,"部门不存在"),
     ;
 
     private Integer code;
