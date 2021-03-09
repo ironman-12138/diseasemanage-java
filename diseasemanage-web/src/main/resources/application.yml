@@ -8,10 +8,16 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/xinguan?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
     username: root
-    password: xtn1208
+    password: 123456
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
+
+  #Redis配置信息
+  redis:
+    port: 6379
+    host: 127.0.0.1
+    timeout: 5000ms
 
 # 端口号
 server:
@@ -28,3 +34,12 @@ mybatis-plus:
       logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
   mapper-locations: classpath*:/mapper/*.xml
 
+jwt:
+  #JWT存储的请求头
+  tokenHeader: Authorization
+  #JWT加密使用的密钥
+  secret: xxxtttnnn
+  #JWT的超期限时间24h
+  expiration: 604800
+  #JWT负载中拿到开头
+  tokenHead: Bearer

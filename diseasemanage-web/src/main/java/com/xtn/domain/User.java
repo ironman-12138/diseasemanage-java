@@ -2,6 +2,7 @@ package com.xtn.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
 
+import java.util.Collection;
 import java.util.Date;
 import java.io.Serializable;
 
@@ -10,6 +11,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * <p>
@@ -23,7 +26,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 @TableName("tb_user")
 @ApiModel(value="User对象", description="用户表")
-public class User implements Serializable {
+public class User implements Serializable , UserDetails {
 
     private static final long serialVersionUID = 1L;
 
@@ -46,7 +49,7 @@ public class User implements Serializable {
     private String phoneNumber;
 
     @ApiModelProperty(value = "状态 0锁定 1有效")
-    private Integer status;
+    private Integer enable;
 
     //@TableField(fill = FieldFill.INSERT) 表示插入时自动赋值
     @ApiModelProperty(value = "创建时间")
@@ -80,4 +83,29 @@ public class User implements Serializable {
     @ApiModelProperty(value = "部门名")
     @TableField(exist = false)
     private String name;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enable==1;
+    }
 }

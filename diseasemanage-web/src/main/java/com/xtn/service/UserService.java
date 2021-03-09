@@ -2,8 +2,11 @@ package com.xtn.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.xtn.common.Result;
 import com.xtn.domain.User;
 import com.xtn.vo.UserVo;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 /**
@@ -21,4 +24,10 @@ public interface UserService extends IService<User> {
 
     //添加新用户
     void addUser(User user);
+
+    //验证用户登录
+    Result login(String username, String password, String code, HttpServletRequest request);
+
+    //根据用户名获取用户
+    User getUserByName(String username);
 }

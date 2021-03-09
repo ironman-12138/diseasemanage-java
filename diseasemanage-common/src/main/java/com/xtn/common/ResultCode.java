@@ -19,12 +19,16 @@ public enum  ResultCode {
     SUCCESS(200,"成功"),
     ERROR(400,"失败"),
     PASSWORD_ERROR(401,"密码不正确"),
-    LOGIN_ERROR(402,"尚未登录"),
+    LOGIN_ERROR(402,"用户名密码错误"),
     DATA_ERROR(403,"没有找到数据"),
     SERVER_ERROR(404,"服务器异常"),
     UNKNOWN_ERROR(405,"未知错误，请联系管理员"),
     USER_ALREADY_EXISTS(406,"用户已存在"),
     DEPART_NO_EXISTS(407,"部门不存在"),
+    LOGIN_NO_PASS(408,"账号被禁用，请联系管理员"),
+    LOGIN_NO(409,"未登录"),
+    LOGIN_NO_ROLE(410,"权限不足"),
+    CAPTCHA_ERROR(411,"验证码错误"),
     ;
 
     private Integer code;
