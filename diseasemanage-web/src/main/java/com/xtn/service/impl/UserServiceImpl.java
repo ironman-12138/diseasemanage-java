@@ -124,6 +124,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public Result login(String username, String password, String code, HttpServletRequest request) {
         String captcha = (String) redisTemplate.opsForValue().get("captcha");
+        if (captcha == null){
+            return Result.error().code(412).message("验证码过期");
+        }
         System.out.println("============="+captcha);
         System.out.println("-------------"+code);
         //验证验证码是否正确

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xtn.mapper.ConsumerMapper">
+    <sql id="typeAll">
+        id,name,address,create_time,modified_time,phone,sort,contact
+    </sql>
+    <select id="selectConsumerList" resultType="com.xtn.domain.Consumer">
+        select <include refid="typeAll"></include>
+        from biz_consumer
+        <where>
+            <if test="name != null and name != ''">
+                name like '%' #{name} '%'
+            </if>
+            <if test="address != null and address != ''">
+                and address like '%' #{address} '%'
+            </if>
+            <if test="contact != null and contact != ''">
+                and contact like '%' #{contact} '%'
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+</mapper>

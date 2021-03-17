@@ -29,6 +29,10 @@ public enum  ResultCode {
     LOGIN_NO(409,"未登录"),
     LOGIN_NO_ROLE(410,"权限不足"),
     CAPTCHA_ERROR(411,"验证码错误"),
+    CAPTCHA_EXPIRE(412,"验证码过期"),
+    ADD_ERROR(413,"添加失败"),
+    DEL_ERROR(414,"删除失败"),
+    UPDATE_ERROR(415,"修改失败"),
     ;
 
     private Integer code;

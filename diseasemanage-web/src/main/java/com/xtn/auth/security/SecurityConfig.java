@@ -58,6 +58,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //使用jwt，不需要csrf
         http.csrf()
                 .disable()
+                // 开启跨域
+                .cors().and()
                 //基于token不需要session
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

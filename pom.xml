@@ -47,6 +47,10 @@
         <kaptcha.version>0.0.9</kaptcha.version>
         <!--redis-->
         <redis.version>2.3.4.RELEASE</redis.version>
+        <!--pagehelper-->
+        <page.version>1.2.5</page.version>
+        <!--日期格式-->
+        <time.version>2.3</time.version>
     </properties>
 
     <dependencyManagement>
@@ -147,6 +151,26 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-data-redis</artifactId>
                 <version>${redis.version}</version>
+            </dependency>
+
+            <!--pagehelper分页依赖-->
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${page.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.mybatis</groupId>
+                        <artifactId>mybatis</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!--日期格式转换-->
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>${time.version}</version>
             </dependency>
 
         </dependencies>

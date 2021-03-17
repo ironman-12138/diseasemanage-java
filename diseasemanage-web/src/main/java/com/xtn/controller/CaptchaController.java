@@ -31,7 +31,7 @@ public class CaptchaController {
 
     @GetMapping(value = "/captcha",produces = "image/jpeg")
     public void captcha(HttpServletRequest request, HttpServletResponse response){
-
+        
         //定义response输出类型为image/jpeg类型
         response.setDateHeader("Expires",0);
         response.setHeader("Cache-Control","no-store,no-cache,must-revalidate");

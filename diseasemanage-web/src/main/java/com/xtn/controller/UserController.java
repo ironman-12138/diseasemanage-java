@@ -57,10 +57,26 @@ public class UserController {
      * @param id 用户id
      * @return
      */
-    @GetMapping(value = "/selectUser/{id}")
-    @ApiOperation(value = "查询指定用户",notes = "根据id查询用户信息")
-    public Result selectUserById(@PathVariable("id") Long id){
+    @GetMapping(value = "/selectUserById")
+    @ApiOperation(value = "根据id查询用户",notes = "根据id查询用户信息")
+    public Result selectUserById(Long id){
         User user = userService.getById(id);
+        if (user != null){
+            return Result.ok().data("user",user);
+        }else {
+            throw new BusinessException(ResultCode.DATA_ERROR.getCode(),ResultCode.DATA_ERROR.getMessage());
+        }
+    }
+
+    /**
+     * 根据用户名查询用户
+     * @param username 用户名
+     * @return
+     */
+    @GetMapping(value = "/selectUserByName")
+    @ApiOperation(value = "根据用户名查询用户",notes = "根据用户名查询用户信息")
+    public Result selectUserByName(String username){
+        User user = userService.getUserByName(username);
         if (user != null){
             return Result.ok().data("user",user);
         }else {

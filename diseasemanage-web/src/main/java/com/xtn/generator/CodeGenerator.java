@@ -67,7 +67,7 @@ public class CodeGenerator {
         // dsc.setSchemaName("public");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("root");
-        dsc.setPassword("xtn1208");
+        dsc.setPassword("123456");
         //使用mysql数据库
         dsc.setDbType(DbType.MYSQL);
         mpg.setDataSource(dsc);
@@ -99,7 +99,7 @@ public class CodeGenerator {
         // 驼峰转连字符
         strategy.setControllerMappingHyphenStyle(true);
         // 忽略表名前缀tb_
-        strategy.setTablePrefix("tb_");
+        strategy.setTablePrefix("biz_");
         mpg.setStrategy(strategy);
         mpg.execute();
     }
