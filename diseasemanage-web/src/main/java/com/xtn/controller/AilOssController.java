@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 
 @RestController
-@Api(value = "阿里云文件管理")
+@Api(tags = "文件上传模块-文件管理")
 @RequestMapping(value = "/aliOss")
 @Slf4j
 public class AilOssController {

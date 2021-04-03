@@ -3,6 +3,8 @@ package com.xtn.mapper;
 import com.xtn.domain.Health;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+import java.util.List;
+
 /**
  * <p>
  *  Mapper 接口
@@ -13,4 +15,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface HealthMapper extends BaseMapper<Health> {
 
+    Health isReport(Long userId);
+
+    List<Health> selectHistoryCard(Health health);
 }

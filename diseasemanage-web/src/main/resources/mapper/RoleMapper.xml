@@ -2,4 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xtn.mapper.RoleMapper">
 
+    <select id="getRolesById" resultType="com.xtn.domain.Role">
+        SELECT
+            r.id,
+            r.role_name,
+            r.remark
+        FROM
+            tb_role r
+        JOIN tb_user_role ur ON r.id = ur.role_id
+        WHERE
+            ur.user_id = #{id}
+    </select>
+
 </mapper>

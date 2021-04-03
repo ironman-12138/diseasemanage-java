@@ -1,38 +1,18 @@
-package com.xtn.domain;
+package com.xtn.vo;
 
 import com.baomidou.mybatisplus.annotation.*;
-
-import java.util.Collection;
-import java.util.Date;
-import java.io.Serializable;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
-/**
- * <p>
- * 用户表
- * </p>
- *
- * @author xcoder
- * @since 2021-02-15
- */
+import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("tb_user")
-@ApiModel(value="User对象", description="用户表")
-public class User implements Serializable , UserDetails {
-
-    private static final long serialVersionUID = 1L;
-
+@ApiModel(value="User对象", description="用户详情表")
+public class UserDetail {
     @ApiModelProperty(value = "用户ID")
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
@@ -86,37 +66,4 @@ public class User implements Serializable , UserDetails {
     @ApiModelProperty(value = "部门名")
     @TableField(exist = false)
     private String name;
-
-    @ApiModelProperty(value = "角色")
-    @TableField(exist = false)
-    private List<Role> roles;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<SimpleGrantedAuthority> collect = roles
-                .stream()
-                .map(role -> new SimpleGrantedAuthority(role.getRoleName()))
-                .collect(Collectors.toList());
-        return collect;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return enable==1;
-    }
 }

@@ -10,4 +10,25 @@
                     group by u.department_id),0) as deptCount
         from tb_department d
     </select>
+
+    <select id="findDept" resultType="com.xtn.domain.Department">
+        select d.id,d.name,d.phone,d.address,d.create_time,d.modified_time,
+            IFNULL((select count(*)
+        from tb_user u
+        where u.department_id=d.id
+        group by u.department_id),0) as deptCount
+        from tb_department d
+        <where>
+            <if test="name != null and name != ''">
+                d.name like '%' #{name} '%'
+            </if>
+            <if test="address != null and address != ''">
+                and d.address like '%' #{address} '%'
+            </if>
+            <if test="phone != null and phone != ''">
+                and d.phone like '%' #{phone} '%'
+            </if>
+        </where>
+        order by d.create_time desc
+    </select>
 </mapper>

@@ -18,7 +18,7 @@ import java.security.Principal;
 /**
  * 登录验证控制层
  */
-@Api(value = "登录模块",tags = "登录接口")
+@Api(tags = "登录模块-登录接口")
 @RestController
 public class LoginController {
 
@@ -41,6 +41,7 @@ public class LoginController {
         String username = principal.getName();
         User user = userService.getUserByName(username);
         user.setPassword(null);
+        user.setRoles(userService.getRolesById(user.getId()));
         return user;
     }
 

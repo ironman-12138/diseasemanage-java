@@ -2,4 +2,81 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xtn.mapper.OutStockMapper">
 
+    <select id="selectInStockList" resultType="com.xtn.vo.OutStockVO">
+        select
+        DISTINCT
+        bis.id,bis.out_num,bis.type,bis.operator,bis.create_time,bis.product_number,bis.consumer_id,bis.remark,bis.status,bis.priority,
+        bc.name,bc.phone
+        from biz_out_stock bis
+        join biz_consumer bc
+        on bis.consumer_id=bc.id
+        <where>
+            <if test="outNum != null and outNum != ''">
+                bis.out_num like '%' #{outNum} '%'
+            </if>
+            <if test="type != null and type != ''">
+                and bis.type=#{type}
+            </if>
+            <if test="status != null and status != ''">
+                and bis.status = #{status}
+            </if>
+        </where>
+        order by bis.create_time desc
+    </select>
+
+    <select id="selectOutStockInfo" resultType="com.xtn.vo.OutStockVO">
+        select
+        DISTINCT
+        bis.id,bis.out_num,bis.type,bis.operator,bis.create_time,bisi.product_number,bis.consumer_id,bis.remark,bis.status,bis.priority,
+        bs.name,bs.address,bs.phone,bs.contact,bp.name as pName,bp.p_num as pNum,bp.image_url as imageUrl,bp.model as model,bp.unit as unit
+        from biz_out_stock bis
+        join biz_out_stock_info bisi
+        on bis.out_num=bisi.out_num
+        join biz_consumer bs
+        on bis.consumer_id=bs.id
+        join biz_product bp
+        on bisi.p_num=bp.p_num
+        where bis.id = #{id}
+        order by create_time desc
+    </select>
+
+    <update id="updateStatus">
+        update
+            biz_out_stock
+        set
+            status=#{status}
+        where
+            id=#{id}
+    </update>
+
+    <select id="outProductCharts" resultType="com.xtn.vo.ProductChartsVo">
+        SELECT
+            p.`name`,ifnull(sum(bosi.product_number),0) AS value
+        FROM
+            biz_product p
+        LEFT JOIN
+            biz_out_stock_info bosi
+        ON
+            p.p_num=bosi.p_num
+        GROUP BY
+            p.`name`
+    </select>
+
+    <select id="outSeven" resultType="com.xtn.vo.SevenCountVo">
+        SELECT
+            DATE_FORMAT(create_time, '%Y-%m-%d') days,
+            count(*) count
+        FROM
+        (
+            SELECT
+                *
+            FROM
+                biz_out_stock
+            WHERE
+                DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= date(create_time)
+        ) AS bos
+        GROUP BY
+            days;
+    </select>
+
 </mapper>

@@ -13,4 +13,47 @@
         on u.department_id=d.id
         ${ew.customSqlSegment}
     </select>
+
+    <select id="selectUserDetailList" resultType="com.xtn.vo.UserDetail">
+        select u.id,username,nickname,email,avatar,phone_number,enable,u.create_time,u.modified_time,sex,salt,type,password,birth,department_id,d.name as name
+        from tb_user u
+        join tb_department d
+        on u.department_id=d.id
+        <where>
+            <if test="username != null and username != ''">
+                u.username like '%' #{username} '%'
+            </if>
+            <if test="nickname != null and nickname != ''">
+                and u.nickname like '%' #{nickname} '%'
+            </if>
+            <if test="email != null and email != ''">
+                and u.email like '%' #{email} '%'
+            </if>
+            <if test="sex != null and sex != ''">
+                and u.sex=#{sex}
+            </if>
+            <if test="departmentId != null and departmentId != ''">
+                and u.department_id=#{departmentId}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectUserVoById" resultType="com.xtn.vo.UserVo">
+        select u.id,username,nickname,email,avatar,phone_number,sex,birth,d.name as departmentName,d.id as departmentId
+        from tb_user u
+        join tb_department d
+        on u.department_id=d.id
+        where u.id=#{id}
+    </select>
+
+    <update id="updateStatus">
+        update
+            tb_user
+        set
+            enable=#{enable}
+        where
+            id=#{id}
+    </update>
+
 </mapper>

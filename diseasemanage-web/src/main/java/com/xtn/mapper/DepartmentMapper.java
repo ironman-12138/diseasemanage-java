@@ -17,4 +17,7 @@ public interface DepartmentMapper extends BaseMapper<Department> {
 
     //获取所有部门和部门人数
     List<Department> getDeptAndCount();
+
+    //分页查询部门信息
+    List<Department> findDept(Department department);
 }

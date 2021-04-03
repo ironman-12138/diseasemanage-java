@@ -50,7 +50,7 @@ public class OutStock implements Serializable {
     @ApiModelProperty(value = "备注")
     private String remark;
 
-    @ApiModelProperty(value = "状态:0:正常入库,1:已进入回收,2:等待审核")
+    @ApiModelProperty(value = "状态:0:正常出库,1:已进入回收,2:等待审核")
     private Integer status;
 
     @ApiModelProperty(value = "紧急程度:1:不急,2:常规,3:紧急4:特急")

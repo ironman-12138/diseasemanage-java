@@ -1,10 +1,13 @@
 package com.xtn.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+import java.util.List;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -22,7 +25,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 @TableName("tb_menu")
 @ApiModel(value="Menu对象", description="菜单表")
-public class Menu implements Serializable {
+public class Menu implements Serializable, Comparable<Menu> {
 
     private static final long serialVersionUID = 1L;
 
@@ -63,5 +66,19 @@ public class Menu implements Serializable {
     @ApiModelProperty(value = "0:不展开，1：展开")
     private Integer open;
 
+    @ApiModelProperty(value = "子菜单")
+    @TableField(exist = false)  //表示数据库表中没有该字段
+    private List<Menu> children;
 
+    @ApiModelProperty(value = "角色列表")
+    @TableField(exist = false)
+    private List<Role> roles;
+
+    @Override
+    public int compareTo(Menu o) {
+        if(this.orderNum != o.orderNum){
+            return (int) (this.orderNum - o.orderNum);
+        }
+        return 0;
+    }
 }

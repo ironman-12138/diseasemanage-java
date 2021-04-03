@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * <p>
@@ -40,9 +41,11 @@ public class Department implements Serializable {
     private String address;
 
     @ApiModelProperty(value = "创建时间")
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     @ApiModelProperty(value = "修改时间")
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date modifiedTime;
 
     //表明这个属性是数据库不存在的字段

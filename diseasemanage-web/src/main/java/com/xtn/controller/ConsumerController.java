@@ -24,7 +24,7 @@ import java.util.List;
  * @Date 2020/3/16 20:18
  * @Version 1.0
  **/
-@Api(tags = "业务模块-物资去向相关接口")
+@Api(tags = "业务模块-物资去向管理接口")
 @RestController
 @RequestMapping("/consumer")
 public class ConsumerController {
@@ -37,7 +37,7 @@ public class ConsumerController {
      *
      * @return
      */
-    @ApiOperation(value = "模糊分页查询去向列表", notes = "去向列表,根据去向名模糊查询")
+    @ApiOperation(value = "模糊分页查询物资去向列表", notes = "去向列表,根据去向名模糊查询")
     @PostMapping("/findConsumerList")
     public Result findConsumerList(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
                                    @RequestParam(value = "pageSize") Integer pageSize,
@@ -50,7 +50,7 @@ public class ConsumerController {
      * 添加去向
      * @return
      */
-    @ApiOperation(value = "添加去向")
+    @ApiOperation(value = "添加物资去向")
     @PostMapping("/add")
     public Result add(@RequestBody @Validated Consumer consumer) {
         consumer.setCreateTime(new Date());
@@ -63,11 +63,11 @@ public class ConsumerController {
     }
 
     /**
-     * 编辑去向
+     * 根据id查询去向
      * @param id
      * @return
      */
-    @ApiOperation(value = "编辑去向", notes = "编辑去向信息")
+    @ApiOperation(value = "根据id查询物资去向", notes = "根据id查询去向")
     @GetMapping("/edit")
     public Result edit(Long id) {
         Consumer consumer = consumerService.edit(id);
@@ -78,7 +78,7 @@ public class ConsumerController {
      * 更新去向
      * @return
      */
-    @ApiOperation(value = "更新去向", notes = "更新去向信息")
+    @ApiOperation(value = "更新物资去向", notes = "更新去向信息")
     @PostMapping("/update")
     public Result update(@RequestBody @Validated Consumer consumer) {
         consumer.setModifiedTime(new Date());
@@ -94,7 +94,7 @@ public class ConsumerController {
      * 删除去向
      * @return
      */
-    @ApiOperation(value = "删除去向", notes = "删除去向信息")
+    @ApiOperation(value = "删除物资去向", notes = "删除去向信息")
     @PostMapping("/delete")
     public Result delete(@RequestBody Consumer consumer) {
         boolean flag = consumerService.removeById(consumer.getId());
@@ -109,7 +109,7 @@ public class ConsumerController {
      * 所有去向
      * @return
      */
-    @ApiOperation(value = "所有去向", notes = "所有去向列表")
+    @ApiOperation(value = "查询所有物资去向", notes = "所有去向列表")
     @GetMapping("/findAll")
     public Result findAll() {
         List<Consumer> consumers = consumerService.list();

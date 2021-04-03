@@ -3,10 +3,15 @@ package com.xtn.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xtn.common.Result;
+import com.xtn.domain.Menu;
+import com.xtn.domain.Role;
 import com.xtn.domain.User;
+import com.xtn.vo.PaginationVo;
+import com.xtn.vo.UserDetail;
 import com.xtn.vo.UserVo;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 
 /**
@@ -20,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 public interface UserService extends IService<User> {
 
     //根据条件分页查询用户信息
-    IPage<User> getUserList(Integer currentPage,Integer pageSize,UserVo userVo);
+    PaginationVo<UserDetail> getUserList(Integer currentPage, Integer pageSize, UserVo userVo);
 
     //添加新用户
     void addUser(User user);
@@ -30,4 +35,11 @@ public interface UserService extends IService<User> {
 
     //根据用户名获取用户
     User getUserByName(String username);
+
+    //根据用户id查询角色
+    List<Role> getRolesById(Long id);
+
+    UserVo selectById(Long id);
+
+    boolean updateStatus(Long id, Integer enable);
 }

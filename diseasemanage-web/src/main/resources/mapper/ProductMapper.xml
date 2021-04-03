@@ -2,4 +2,79 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xtn.mapper.ProductMapper">
 
+    <select id="selectProductList" resultType="com.xtn.vo.ProductVO">
+        select
+            id,p_num,name,image_url,model,unit,remark,sort,create_time,modified_time,one_category_id,two_category_id,three_category_id,status
+        from
+            biz_product
+        <where>
+            <if test="name != null and name != ''">
+                name like '%' #{name} '%'
+            </if>
+            <if test="oneCategoryId != null and oneCategoryId != ''">
+                and one_category_id=#{oneCategoryId}
+            </if>
+            <if test="twoCategoryId != null and twoCategoryId != ''">
+                and two_category_id=#{twoCategoryId}
+            </if>
+            <if test="threeCategoryId != null and threeCategoryId != ''">
+                and three_category_id=#{threeCategoryId}
+            </if>
+            <if test="status != null and status != ''">
+                and status=#{status}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <update id="publish">
+        update
+            biz_product
+        set
+            status=0
+        where
+            id=#{id}
+    </update>
+
+    <select id="selectOutProductList" resultType="com.xtn.vo.ProductVO">
+        select
+            bp.id,bp.p_num,bp.name,bp.image_url,bp.model,bp.unit,bp.remark,bp.sort,bp.create_time,bp.modified_time,bp.one_category_id,bp.two_category_id,bp.three_category_id,bp.status,
+            bps.stock
+        from
+            biz_product bp
+        join
+            biz_product_stock bps
+        on
+            bp.p_num=bps.p_num
+        <where>
+            <if test="name != null and name != ''">
+                and bp.name like '%' #{name} '%'
+            </if>
+            <if test="oneCategoryId != null and oneCategoryId != ''">
+                and bp.one_category_id=#{oneCategoryId}
+            </if>
+            <if test="twoCategoryId != null and twoCategoryId != ''">
+                and bp.two_category_id=#{twoCategoryId}
+            </if>
+            <if test="threeCategoryId != null and threeCategoryId != ''">
+                and bp.three_category_id=#{threeCategoryId}
+            </if>
+            <if test="status != null and status != ''">
+                and bp.status=#{status}
+            </if>
+        </where>
+        order by bp.create_time desc
+    </select>
+
+    <select id="selectAll" resultType="com.xtn.vo.ProductChartsVo">
+        SELECT
+            bps.stock as value,bp.`name`
+        FROM
+            biz_product bp
+        JOIN
+            biz_product_stock bps
+        ON
+            bp.p_num=bps.p_num
+    </select>
+
 </mapper>

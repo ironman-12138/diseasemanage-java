@@ -2,4 +2,105 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xtn.mapper.MenuMapper">
 
+    <!-- property：主键在domain中的属性名 -->
+    <!-- column：主键在数据库中的列名 -->
+    <resultMap id="BaseResultMap" type="com.xtn.domain.Menu">
+        <id column="id" property="id"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="menu_name" property="menuName"/>
+        <result column="url" property="url"/>
+        <result column="perms" property="perms"/>
+        <result column="icon" property="icon"/>
+        <result column="type" property="type"/>
+        <result column="order_num" property="orderNum"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modified_time" property="modifiedTime"/>
+        <result column="available" property="available"/>
+        <result column="open" property="open"/>
+    </resultMap>
+
+    <resultMap id="Menu" type="com.xtn.domain.Menu" extends="BaseResultMap">
+        <collection property="children" ofType="com.xtn.domain.Menu">
+            <id column="id1" property="id"/>
+            <result column="parent_id1" property="parentId"/>
+            <result column="menu_name1" property="menuName"/>
+            <result column="url1" property="url"/>
+            <result column="perms1" property="perms"/>
+            <result column="icon1" property="icon"/>
+            <result column="type1" property="type"/>
+            <result column="order_num1" property="orderNum"/>
+            <result column="create_time1" property="createTime"/>
+            <result column="modified_time1" property="modifiedTime"/>
+            <result column="available1" property="available"/>
+            <result column="open1" property="open"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="MenuRole" type="com.xtn.domain.Menu" extends="BaseResultMap">
+        <collection property="roles" ofType="com.xtn.domain.Role">
+            <id column="rId" property="id"/>
+            <result column="rname" property="roleName"/>
+            <result column="remark" property="remark"/>
+        </collection>
+    </resultMap>
+
+    <select id="getMenusById" resultMap="Menu">
+        SELECT
+        DISTINCT
+        m1.*,m2.id as id1,m2.url as url1,m2.menu_name as menu_name1,m2.icon as icon1,m2.available as available1,m2.parent_id as parent_id1
+        FROM
+        tb_menu m1,
+        tb_menu m2,
+        tb_user_role ur,
+        tb_role_menu mr
+        WHERE
+        m1.id = m2.parent_id
+        AND
+        mr.role_id = ur.role_id
+        AND
+        ur.user_id = #{id}
+        AND
+        m2.available = 1
+        AND
+        m1.type=0
+        AND
+        m2.type=0
+        ORDER BY m1.id
+    </select>
+
+    <select id="getMenuByRole" resultMap="MenuRole">
+        SELECT
+        m.*,
+        r.id as rId,
+        r.role_name as rname,
+        r.remark
+        FROM
+        tb_menu m
+        JOIN
+        tb_role_menu rm
+        ON
+        m.id=rm.menu_id
+        JOIN
+        tb_role r
+        ON
+        rm.role_id=r.id
+        ORDER BY m.id
+    </select>
+
+    <select id="findAll" resultType="com.xtn.domain.Menu">
+        select
+        DISTINCT
+        m.*
+        from
+        tb_menu m,
+        tb_user_role ur,
+        tb_role_menu mr
+        WHERE
+        mr.role_id = ur.role_id
+        AND
+        ur.user_id = #{id}
+        AND
+        m.type=0
+    </select>
+
 </mapper>

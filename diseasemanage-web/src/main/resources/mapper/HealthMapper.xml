@@ -2,4 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xtn.mapper.HealthMapper">
 
+    <select id="isReport" resultType="com.xtn.domain.Health">
+        select
+            *
+        from
+            biz_health
+        where
+            user_id=#{userId}
+        and
+            to_days(create_time) = to_days(now())
+    </select>
+
+    <select id="selectHistoryCard" resultType="com.xtn.domain.Health">
+        select
+            *
+        from
+            biz_health
+        where
+            user_id=#{userId}
+    </select>
+
 </mapper>

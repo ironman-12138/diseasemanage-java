@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 @RestController
-@Api(value = "验证码模块",tags = "生成验证码接口")
+@Api(tags = "验证码模块-生成接口")
 public class CaptchaController {
 
     @Autowired

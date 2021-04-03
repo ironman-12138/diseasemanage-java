@@ -4,14 +4,17 @@ import com.xtn.domain.User;
 import com.xtn.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.annotation.Resource;
@@ -29,6 +32,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private RestfulAccessDeniedHandler restfulAccessDeniedHandler;
     @Resource
     private RestAuthorizationEntryPoint restAuthorizationEntryPoint;
+    @Resource
+    private CustomerFilter customerFilter;
+    @Resource
+    private CustomUrlDecisionManager customUrlDecisionManager;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -49,7 +56,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/webjars/**",
                 "/swagger-resources/**",
                 "/v2/api-docs/**",
-                "/captcha"
+                "/captcha",
+                "/favicon.ico"
         );
     }
 
@@ -67,6 +75,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .anyRequest()
                 .authenticated()
+                //动态权限配置
+                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+
+                    @Override
+                    public <O extends FilterSecurityInterceptor> O postProcess(O o) {
+                        o.setAccessDecisionManager(customUrlDecisionManager);
+                        o.setSecurityMetadataSource(customerFilter);
+                        return o;
+                    }
+                })
                 .and()
                 .headers()
                 .cacheControl();
@@ -85,9 +103,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return username -> {
             User user = userService.getUserByName(username);
             if (null != user){
+                user.setRoles(userService.getRolesById(user.getId()));
                 return user;
             }
-            return null;
+            throw new UsernameNotFoundException("用户名或密码错误！");
         };
     }
 

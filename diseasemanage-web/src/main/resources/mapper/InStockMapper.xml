@@ -2,4 +2,90 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xtn.mapper.InStockMapper">
 
+
+    <select id="selectInStockList" resultType="com.xtn.vo.InStockVO">
+        select
+        DISTINCT
+            bis.id,bis.in_num,bis.type,bis.operator,bis.create_time,bis.modified,bis.product_number,bis.supplier_id,bis.remark,bis.status,
+            bs.name,bs.phone
+        from biz_in_stock bis
+        join biz_supplier bs
+        on bis.supplier_id=bs.id
+        <where>
+            <if test="inNum != null and inNum != ''">
+                bis.in_num like '%' #{inNum} '%'
+            </if>
+            <if test="type != null and type != ''">
+                and bis.type=#{type}
+            </if>
+            <if test="status != null and status != ''">
+                and bis.status = #{status}
+            </if>
+            <if test="startTime != null">
+                and unix_timestamp(bis.create_time) &gt;
+                unix_timestamp(#{startTime})
+            </if>
+            <if test="endTime != null">
+                and unix_timestamp(bis.create_time) &lt;
+                unix_timestamp(#{endTime})
+            </if>
+        </where>
+        order by bis.create_time desc
+    </select>
+
+    <select id="selectInStockInfo" resultType="com.xtn.vo.InStockVO">
+        select
+        DISTINCT
+        bis.id,bis.in_num,bis.type,bis.operator,bis.create_time,bis.modified,bisi.product_number,bis.supplier_id,bis.remark,bis.status,
+        bs.name,bs.address,bs.email,bs.phone,bs.contact,bp.name as pName,bp.p_num as pNum,bp.image_url as imageUrl,bp.model as model,bp.unit as unit
+        from biz_in_stock bis
+        join biz_in_stock_info bisi
+        on bis.in_num=bisi.in_num
+        join biz_supplier bs
+        on bis.supplier_id=bs.id
+        join biz_product bp
+        on bisi.p_num=bp.p_num
+        where bis.id = #{id}
+        order by create_time desc
+    </select>
+
+    <update id="updateStatus">
+        update
+            biz_in_stock
+        set
+            status=#{status}
+        where
+            id=#{id}
+    </update>
+
+    <select id="inProductCharts" resultType="com.xtn.vo.ProductChartsVo">
+        SELECT
+            p.`name`,ifnull(sum(bisi.product_number),0) AS value
+        FROM
+            biz_product p
+        LEFT JOIN
+            biz_in_stock_info bisi
+        ON
+            p.p_num=bisi.p_num
+        GROUP BY
+            p.`name`
+    </select>
+
+    <select id="inSeven" resultType="com.xtn.vo.SevenCountVo">
+        SELECT
+            DATE_FORMAT(create_time, '%Y-%m-%d') days,
+            count(*) count
+        FROM
+        (
+            SELECT
+                *
+            FROM
+                biz_in_stock
+            WHERE
+                DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= date(create_time)
+        ) AS bis
+        GROUP BY
+            days;
+    </select>
+
 </mapper>

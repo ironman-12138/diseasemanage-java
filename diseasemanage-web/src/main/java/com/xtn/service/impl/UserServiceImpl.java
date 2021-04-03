@@ -5,15 +5,19 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.xtn.common.Result;
 import com.xtn.common.ResultCode;
 import com.xtn.auth.security.JwtTokenUtil;
 import com.xtn.common.hander.BusinessException;
-import com.xtn.domain.Department;
-import com.xtn.domain.User;
+import com.xtn.domain.*;
 import com.xtn.mapper.DepartmentMapper;
+import com.xtn.mapper.RoleMapper;
 import com.xtn.mapper.UserMapper;
 import com.xtn.service.UserService;
+import com.xtn.vo.PaginationVo;
+import com.xtn.vo.UserDetail;
 import com.xtn.vo.UserVo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -28,6 +32,7 @@ import org.springframework.util.StringUtils;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -45,6 +50,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private UserMapper userMapper;
     @Resource
     private DepartmentMapper departmentMapper;
+    @Resource
+    private RoleMapper roleMapper;
     @Resource
     PasswordEncoder passwordEncoder;
     @Resource
@@ -66,28 +73,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     //根据条件分页查询用户信息
     @Override
-    public IPage<User> getUserList(Integer currentPage,Integer pageSize,UserVo userVo) {
-        Page<User> page = new Page<>(currentPage,pageSize);
-        QueryWrapper<User> queryWrapper = null;
-        if (userVo != null){
-            queryWrapper = new QueryWrapper<>();
-            if (!StringUtils.isEmpty(userVo.getDepartmentId())){
-                queryWrapper.eq("department_id",userVo.getDepartmentId());
-            }
-            if (!StringUtils.isEmpty(userVo.getUsername())){
-                queryWrapper.eq("username",userVo.getUsername());
-            }
-            if (!StringUtils.isEmpty(userVo.getNickname())){
-                queryWrapper.eq("nickname",userVo.getNickname());
-            }
-            if (!StringUtils.isEmpty(userVo.getEmail())){
-                queryWrapper.eq("email",userVo.getEmail());
-            }
-            if (!StringUtils.isEmpty(userVo.getSex())){
-                queryWrapper.eq("sex",userVo.getSex());
-            }
-        }
-        return this.baseMapper.getUserList(page,queryWrapper);
+    public PaginationVo<UserDetail> getUserList(Integer currentPage, Integer pageSize, UserVo userVo) {
+        PaginationVo<UserDetail> vo = new PaginationVo<>();
+        //pageNum:查询的页数，pageSize:一页显示的数量
+        PageHelper.startPage(currentPage,pageSize);
+        List<UserDetail> userDetailList = userMapper.selectUserDetailList(userVo);
+        //获取总记录数pageInfo.getTotal()
+        PageInfo<UserDetail> pageInfo = new PageInfo<>(userDetailList);
+        vo.setTotal(Integer.parseInt(String.valueOf(pageInfo.getTotal())));
+        vo.setDataList(userDetailList);
+        return vo;
     }
 
     //添加新用户
@@ -127,8 +122,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (captcha == null){
             return Result.error().code(412).message("验证码过期");
         }
-        System.out.println("============="+captcha);
-        System.out.println("-------------"+code);
         //验证验证码是否正确
         if (StringUtils.isEmpty(code) || !captcha.equalsIgnoreCase(code)){
             return Result.error().code(411).message("验证码错误,请查询输入");
@@ -159,4 +152,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public User getUserByName(String username) {
         return userMapper.selectOne(new QueryWrapper<User>().eq("username",username).eq("enable",1));
     }
+
+    //根据用户id查询角色列表
+    @Override
+    public List<Role> getRolesById(Long id) {
+        return roleMapper.getRolesById(id);
+    }
+
+    @Override
+    public UserVo selectById(Long id) {
+        return userMapper.selectUserVoById(id);
+    }
+
+    @Override
+    public boolean updateStatus(Long id, Integer enable) {
+        int res = userMapper.updateStatus(id,enable);
+        if (res != 0){
+            return true;
+        }
+        return false;
+    }
+
+
 }
