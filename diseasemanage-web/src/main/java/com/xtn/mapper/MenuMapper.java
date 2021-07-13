@@ -27,4 +27,7 @@ public interface MenuMapper extends BaseMapper<Menu> {
     //查询出所有的菜单
     List<Menu> findAll(Long id);
 
+    List<Menu> findAllMenuAndButton(Long id);
+
+    List<Menu> findMenuList();
 }

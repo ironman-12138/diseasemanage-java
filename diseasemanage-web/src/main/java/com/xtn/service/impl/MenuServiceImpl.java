@@ -72,6 +72,63 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         }
     }
 
+    //查询出所有的菜单和按钮
+    @Override
+    public List<Menu> findAllMenuAndButton() {
+        //查询出所有的菜单和按钮
+        List<Menu> allMenu = menuMapper.findAllMenuAndButton(((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId());
+        //根节点存储
+        List<Menu> rootMenu = new ArrayList<>();
+
+        //父节点是0的，为根节点
+        for (Menu nav : allMenu) {
+            if(nav.getParentId().longValue() == 0){
+                rootMenu.add(nav);
+            }
+        }
+
+        // 根据Menu类的order排序
+        Collections.sort(rootMenu);
+
+        //为根节点设置子菜单，getChild是递归调用
+        for (Menu nv : rootMenu) {
+            //获取根节点下的所有子节点，使用getChild方法
+            List<Menu> childList = getChild(nv.getId(),allMenu);
+            //给根节点设置子节点
+            nv.setChildren(childList);
+        }
+        return rootMenu;
+    }
+
+    @Override
+    public List<Menu> findMenuList() {
+
+        //查询出所有的菜单和按钮
+        List<Menu> allMenu = menuMapper.findMenuList();
+        //根节点存储
+        List<Menu> rootMenu = new ArrayList<>();
+
+        //父节点是0的，为根节点
+        for (Menu nav : allMenu) {
+            if(nav.getParentId().longValue() == 0){
+                rootMenu.add(nav);
+            }
+        }
+
+        // 根据Menu类的order排序
+        Collections.sort(rootMenu);
+
+        //为根节点设置子菜单，getChild是递归调用
+        for (Menu nv : rootMenu) {
+            //获取根节点下的所有子节点，使用getChild方法
+            List<Menu> childList = getChild(nv.getId(),allMenu);
+            //给根节点设置子节点
+            nv.setChildren(childList);
+        }
+        return rootMenu;
+
+    }
+
     private List<Menu> getChild(Long id, List<Menu> allMenu) {
         //子菜单
         List<Menu> childList = new ArrayList<>();

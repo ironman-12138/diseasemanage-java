@@ -43,3 +43,9 @@ jwt:
   expiration: 604800
   #JWT负载中拿到开头
   tokenHead: Bearer
+
+alioss:
+  endpoint: https://oss-cn-hangzhou.aliyuncs.com
+  accessKeyId: LTAI5t8hV2rPxQWcNSN8UabR
+  accessKeySecret: 6uk3qsWLMAvG5T8LY59fULfEogQ46S
+  bucketName: diseasemanage

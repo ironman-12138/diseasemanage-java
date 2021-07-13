@@ -2,6 +2,9 @@ package com.xtn.service;
 
 import com.xtn.domain.Role;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.xtn.vo.PaginationVo;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface RoleService extends IService<Role> {
 
+    //分页模糊查询角色列表
+    PaginationVo<Role> findRoleList(Integer pageNum, Integer pageSize, Role role);
+
+    List<Long> findMenuIdsByRoleId(Long id);
+
+    boolean authority(Long id,long... longs);
 }

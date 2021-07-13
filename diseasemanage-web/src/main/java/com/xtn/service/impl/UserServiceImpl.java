@@ -15,6 +15,7 @@ import com.xtn.domain.*;
 import com.xtn.mapper.DepartmentMapper;
 import com.xtn.mapper.RoleMapper;
 import com.xtn.mapper.UserMapper;
+import com.xtn.service.LoginLogService;
 import com.xtn.service.UserService;
 import com.xtn.vo.PaginationVo;
 import com.xtn.vo.UserDetail;
@@ -62,6 +63,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private String tokenHead;
     @Resource
     private RedisTemplate redisTemplate;
+    @Resource
+    private LoginLogService loginLogService;
 
     /*//分页查询所有用户信息
     @Override
@@ -144,6 +147,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Map<String,String> tokenMap = new HashMap<>();
         tokenMap.put("token",token);
         tokenMap.put("tokenHead",tokenHead);
+
+        //保存用户登录日志
+        loginLogService.add(username,request);
         return Result.ok().code(200).message("登录成功").data("tokenMap",tokenMap);
     }
 

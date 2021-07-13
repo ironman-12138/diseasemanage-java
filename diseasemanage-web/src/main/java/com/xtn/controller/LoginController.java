@@ -2,6 +2,7 @@ package com.xtn.controller;
 
 import com.xtn.common.Result;
 import com.xtn.domain.User;
+import com.xtn.service.LoginLogService;
 import com.xtn.service.UserService;
 import com.xtn.vo.UserLogin;
 import io.swagger.annotations.Api;
@@ -28,7 +29,6 @@ public class LoginController {
     @ApiOperation(value = "登录之后返回token")
     @PostMapping("/login")
     public Result login(@RequestBody UserLogin userLogin, HttpServletRequest request){
-        System.out.println("用户登录信息："+userLogin);
         return userService.login(userLogin.getUsername(),userLogin.getPassword(),userLogin.getCode(),request);
     }
 

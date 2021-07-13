@@ -14,4 +14,47 @@
             ur.user_id = #{id}
     </select>
 
+    <select id="selectRoleList" resultType="com.xtn.domain.Role">
+        select
+            *
+        from
+            tb_role
+        <where>
+            <if test="roleName != null and roleName != ''">
+                role_name like '%' #{roleName} '%'
+            </if>
+        </where>
+    </select>
+
+    <select id="findMenuIdsByRoleId" resultType="com.xtn.domain.Menu">
+        SELECT
+            DISTINCT
+            trm.menu_id AS id
+        FROM
+            tb_role_menu trm
+        JOIN
+            tb_role tr
+        ON
+            tr.id=trm.role_id
+        JOIN
+            tb_user_role tur
+        ON
+            tur.role_id=tr.id
+        AND
+            tr.id=#{id}
+    </select>
+
+    <delete id="remove">
+        delete
+        from
+            tb_role_menu
+        where
+            role_id=#{id}
+    </delete>
+
+    <insert id="authority">
+        insert
+        into tb_role_menu(role_id,menu_id)
+        values(#{roleId},#{menuId})
+    </insert>
 </mapper>

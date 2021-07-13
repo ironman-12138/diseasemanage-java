@@ -99,7 +99,7 @@ public class CodeGenerator {
         // 驼峰转连字符
         strategy.setControllerMappingHyphenStyle(true);
         // 忽略表名前缀tb_
-        strategy.setTablePrefix("biz_");
+        strategy.setTablePrefix("tb_");
         mpg.setStrategy(strategy);
         mpg.execute();
     }

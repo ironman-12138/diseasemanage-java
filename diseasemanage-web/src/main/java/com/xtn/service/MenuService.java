@@ -23,4 +23,10 @@ public interface MenuService extends IService<Menu> {
 
     //查询所有菜单
     List<Menu> findAll();
+
+    //查询所有菜单按钮
+    List<Menu> findAllMenuAndButton();
+
+    //查询所有菜单包括不可用的
+    List<Menu> findMenuList();
 }

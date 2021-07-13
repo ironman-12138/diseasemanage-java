@@ -101,6 +101,36 @@
         ur.user_id = #{id}
         AND
         m.type=0
+        AND
+        m.available = 1
+    </select>
+
+    <select id="findAllMenuAndButton" resultType="com.xtn.domain.Menu">
+        select
+        DISTINCT
+        m.*
+        from
+        tb_menu m,
+        tb_user_role ur,
+        tb_role_menu mr
+        WHERE
+        mr.role_id = ur.role_id
+        AND
+        ur.user_id = #{id}
+    </select>
+
+    <select id="findMenuList" resultType="com.xtn.domain.Menu">
+        select
+        DISTINCT
+        m.*
+        from
+        tb_menu m,
+        tb_user_role ur,
+        tb_role_menu mr
+        WHERE
+        mr.role_id = ur.role_id
+        AND
+        m.type=0
     </select>
 
 </mapper>

@@ -1,8 +1,10 @@
 package com.xtn.mapper;
 
+import com.xtn.domain.Menu;
 import com.xtn.domain.Role;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 
@@ -18,4 +20,14 @@ public interface RoleMapper extends BaseMapper<Role> {
 
     //根据用户id查询角色列表
     List<Role> getRolesById(@Param("id") Long id);
+
+    //分页模糊查询角色列表
+    List<Role> selectRoleList(Role role);
+
+    //获取角色权限id列表
+    List<Menu> findMenuIdsByRoleId(Long id);
+
+    void remove(Long id);
+
+    void authority(@Param("roleId") Long id,@Param("menuId") long aLong);
 }
