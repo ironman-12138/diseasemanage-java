@@ -33,4 +33,5 @@ public interface UserMapper extends BaseMapper<User> {
 
 
     int updateStatus(@Param("id") Long id,@Param("enable") Integer enable);
+
 }

@@ -30,4 +30,7 @@ public interface MenuMapper extends BaseMapper<Menu> {
     List<Menu> findAllMenuAndButton(Long id);
 
     List<Menu> findMenuList();
+
+    //根据url查询菜单所需角色列表
+    List<String> getRoleListByUrl(String url);
 }

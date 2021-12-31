@@ -133,4 +133,15 @@
         m.type=0
     </select>
 
+    <select id="getRoleListByUrl" resultType="java.lang.String">
+        SELECT
+            distinct r.role_name
+        FROM
+            tb_menu m
+            JOIN tb_role_menu ru ON ru.menu_id = m.id
+            JOIN tb_role r ON r.id = ru.role_id
+        WHERE
+            m.url = #{url}
+    </select>
+
 </mapper>

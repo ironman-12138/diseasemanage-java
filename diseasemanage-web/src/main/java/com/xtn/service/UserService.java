@@ -28,7 +28,7 @@ public interface UserService extends IService<User> {
     PaginationVo<UserDetail> getUserList(Integer currentPage, Integer pageSize, UserVo userVo);
 
     //添加新用户
-    void addUser(User user);
+    void addUser(UserVo user);
 
     //验证用户登录
     Result login(String username, String password, String code, HttpServletRequest request);
@@ -42,4 +42,5 @@ public interface UserService extends IService<User> {
     UserVo selectById(Long id);
 
     boolean updateStatus(Long id, Integer enable);
+
 }

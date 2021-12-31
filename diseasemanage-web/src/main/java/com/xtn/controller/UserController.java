@@ -6,7 +6,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xtn.common.Result;
 import com.xtn.common.ResultCode;
 import com.xtn.common.hander.BusinessException;
+import com.xtn.domain.RoleMenu;
 import com.xtn.domain.User;
+import com.xtn.mapper.RoleMenuMapper;
 import com.xtn.service.UserService;
 import com.xtn.vo.PaginationVo;
 import com.xtn.vo.UserDetail;
@@ -37,6 +39,8 @@ public class UserController {
 
     @Resource
     private UserService userService;
+    @Resource
+    private RoleMenuMapper roleMenuMapper;
 
     /**
      * 根据条件分页查询所有用户信息
@@ -95,7 +99,7 @@ public class UserController {
      */
     @PostMapping(value = "/save")
     @ApiOperation(value = "添加用户",notes = "添加用户信息")
-    public Result saveUser(@RequestBody User user){
+    public Result saveUser(@RequestBody UserVo user){
         try{
             userService.addUser(user);
             return Result.ok();
@@ -146,6 +150,7 @@ public class UserController {
         }
         return Result.error();
     }
+
 
 }
 

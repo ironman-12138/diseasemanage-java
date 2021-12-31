@@ -129,6 +129,11 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     }
 
+    @Override
+    public List<String> getRoleListByUrl(String url) {
+        return baseMapper.getRoleListByUrl(url);
+    }
+
     private List<Menu> getChild(Long id, List<Menu> allMenu) {
         //子菜单
         List<Menu> childList = new ArrayList<>();

@@ -25,7 +25,7 @@ true -->
     <appender name="FILE"
               class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!--<File>/home/log/stdout.log</File>-->
-        <File>E:/IdeaSpringBoot-log/diseasemanage.log</File>
+        <File>D:/IdeaSpringBoot-log/diseasemanage.log</File>
         <encoder>
             <pattern>%date [%-5p] %thread %logger{60} [%file : %line] %msg%n</pattern>
         </encoder>

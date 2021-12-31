@@ -29,4 +29,7 @@ public interface MenuService extends IService<Menu> {
 
     //查询所有菜单包括不可用的
     List<Menu> findMenuList();
+
+    //根据url查询菜单所需角色列表
+    List<String> getRoleListByUrl(String url);
 }

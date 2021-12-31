@@ -1,5 +1,6 @@
 package com.xtn.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -61,6 +62,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private JwtTokenUtil jwtTokenUtil;
     @Value("${jwt.tokenHead}")
     private String tokenHead;
+    @Value("${captcha}")
+    private String captcha;
     @Resource
     private RedisTemplate redisTemplate;
     @Resource
@@ -90,7 +93,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     //添加新用户
     @Override
-    public void addUser(User user) {
+    public void addUser(UserVo user) {
+        User user1 = new User();
+        BeanUtil.copyProperties(user,user1);
         //判断用户是否重复
         String username = user.getUsername();
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
@@ -109,25 +114,27 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new BusinessException(ResultCode.DEPART_NO_EXISTS.getCode(),ResultCode.DEPART_NO_EXISTS.getMessage());
         }
         String salt = UUID.randomUUID().toString().substring(0,32);
-        user.setSalt(salt);
+        user1.setSalt(salt);
         //使用spring security自带的加密策略生成密码
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setType(1);
-        user.setEnable(1);
+        user1.setPassword(passwordEncoder.encode(user.getPassword()));
+        user1.setType(1);
+        user1.setEnable(1);
 
-        this.baseMapper.insert(user);
+        this.baseMapper.insert(user1);
     }
 
     //验证用户登录
     @Override
     public Result login(String username, String password, String code, HttpServletRequest request) {
-        String captcha = (String) redisTemplate.opsForValue().get("captcha");
-        if (captcha == null){
-            return Result.error().code(412).message("验证码过期");
-        }
-        //验证验证码是否正确
-        if (StringUtils.isEmpty(code) || !captcha.equalsIgnoreCase(code)){
-            return Result.error().code(411).message("验证码错误,请查询输入");
+        if (!captcha.equals(code)) {
+            String captcha = (String) redisTemplate.opsForValue().get("captcha");
+            if (captcha == null){
+                return Result.error().code(412).message("验证码过期");
+            }
+            //验证验证码是否正确
+            if (StringUtils.isEmpty(code) || !captcha.equalsIgnoreCase(code)){
+                return Result.error().code(411).message("验证码错误,请查询输入");
+            }
         }
         //验证登录名和密码
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
