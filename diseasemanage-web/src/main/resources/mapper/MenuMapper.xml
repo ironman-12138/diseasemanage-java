@@ -141,7 +141,7 @@
             JOIN tb_role_menu ru ON ru.menu_id = m.id
             JOIN tb_role r ON r.id = ru.role_id
         WHERE
-            m.url = #{url}
+            m.url = #{url} and m.available = 1
     </select>
 
 </mapper>
