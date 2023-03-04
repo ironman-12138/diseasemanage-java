@@ -22,4 +22,10 @@ public interface RoleService extends IService<Role> {
     List<Long> findMenuIdsByRoleId(Long id);
 
     boolean authority(Long id,long... longs);
+
+    //根据用户id查询用户的角色id列表
+    List<Long> selectRoleIdListByUserId(Long id);
+
+    //获取全部角色列表
+    List<Role> getDownList();
 }

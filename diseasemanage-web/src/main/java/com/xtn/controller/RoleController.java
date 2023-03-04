@@ -46,6 +46,13 @@ public class RoleController {
         return Result.ok().data("role",roleList);
     }
 
+    @ApiOperation(value = "查询角色下拉列表", notes = "查询角色下拉列表")
+    @GetMapping("/downList")
+    public Result downList() {
+        List<Role> roleList = roleService.getDownList();
+        return Result.ok().data("roleList",roleList);
+    }
+
     /**
      * 角色拥有的菜单权限id和菜单
      * @return

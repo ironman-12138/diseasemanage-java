@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.xtn.common.Constant;
 import com.xtn.common.Result;
 import com.xtn.common.ResultCode;
 import com.xtn.auth.security.JwtTokenUtil;
@@ -17,6 +18,7 @@ import com.xtn.mapper.DepartmentMapper;
 import com.xtn.mapper.RoleMapper;
 import com.xtn.mapper.UserMapper;
 import com.xtn.service.LoginLogService;
+import com.xtn.service.UserRoleService;
 import com.xtn.service.UserService;
 import com.xtn.vo.PaginationVo;
 import com.xtn.vo.UserDetail;
@@ -36,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * <p>
@@ -68,6 +71,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private RedisTemplate redisTemplate;
     @Resource
     private LoginLogService loginLogService;
+    @Resource
+    private UserRoleService userRoleService;
 
     /*//分页查询所有用户信息
     @Override
@@ -121,6 +126,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user1.setEnable(1);
 
         this.baseMapper.insert(user1);
+        //赋予默认用户角色
+        Role role = roleMapper.selectOne(new QueryWrapper<Role>().eq("role_name", Constant.DEFAULT_ROLE));
+        if (Objects.nonNull(role)) {
+            UserRole userRole = new UserRole();
+            userRole.setRoleId(role.getId());
+            userRole.setUserId(user.getId());
+            userRoleService.save(userRole);
+        }
     }
 
     //验证用户登录

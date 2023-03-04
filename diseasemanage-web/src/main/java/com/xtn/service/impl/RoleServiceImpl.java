@@ -1,5 +1,6 @@
 package com.xtn.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xtn.domain.Consumer;
@@ -66,5 +67,15 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
             roleMapper.authority(id,longs[i]);
         }
         return true;
+    }
+
+    @Override
+    public List<Long> selectRoleIdListByUserId(Long id) {
+        return roleMapper.selectRoleIdListByUserId(id);
+    }
+
+    @Override
+    public List<Role> getDownList() {
+        return roleMapper.selectList(new QueryWrapper<Role>().eq("status", 1));
     }
 }

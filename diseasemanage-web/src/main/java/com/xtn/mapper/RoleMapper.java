@@ -30,4 +30,7 @@ public interface RoleMapper extends BaseMapper<Role> {
     void remove(Long id);
 
     void authority(@Param("roleId") Long id,@Param("menuId") long aLong);
+
+    //根据用户id查询用户的角色id列表
+    List<Long> selectRoleIdListByUserId(Long id);
 }

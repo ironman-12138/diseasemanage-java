@@ -1,14 +1,19 @@
 package com.xtn.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xtn.common.Result;
 import com.xtn.common.ResultCode;
 import com.xtn.common.hander.BusinessException;
+import com.xtn.domain.Role;
 import com.xtn.domain.RoleMenu;
 import com.xtn.domain.User;
+import com.xtn.domain.UserRole;
 import com.xtn.mapper.RoleMenuMapper;
+import com.xtn.service.RoleService;
+import com.xtn.service.UserRoleService;
 import com.xtn.service.UserService;
 import com.xtn.vo.PaginationVo;
 import com.xtn.vo.UserDetail;
@@ -22,6 +27,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -40,7 +46,9 @@ public class UserController {
     @Resource
     private UserService userService;
     @Resource
-    private RoleMenuMapper roleMenuMapper;
+    private RoleService roleService;
+    @Resource
+    private UserRoleService userRoleService;
 
     /**
      * 根据条件分页查询所有用户信息
@@ -123,6 +131,8 @@ public class UserController {
     @ApiOperation(value = "编辑用户",notes = "编辑用户")
     public Result selectById(User user){
         UserVo userVo = userService.selectById(user.getId());
+        List<Long> roleList = roleService.selectRoleIdListByUserId(user.getId());
+        userVo.setRoleIdList(roleList);
         if (userVo != null){
             return Result.ok().data("user",userVo);
         }
@@ -131,10 +141,20 @@ public class UserController {
 
     @PostMapping(value = "/update")
     @ApiOperation(value = "更新用户",notes = "更新用户")
-    public Result update(UserVo userVo){
+    public Result update(@RequestBody UserVo userVo){
         User user = new User();
         BeanUtils.copyProperties(userVo,user);
         boolean b = userService.updateById(user);
+        //更新角色
+        userRoleService.remove(new QueryWrapper<UserRole>().eq("user_id", user.getId()));
+        if (Objects.nonNull(userVo.getRoleIdList())) {
+            userVo.getRoleIdList().forEach(item -> {
+                UserRole userRole = new UserRole();
+                userRole.setRoleId(item);
+                userRole.setUserId(user.getId());
+                userRoleService.save(userRole);
+            });
+        }
         if (b){
             return Result.ok();
         }

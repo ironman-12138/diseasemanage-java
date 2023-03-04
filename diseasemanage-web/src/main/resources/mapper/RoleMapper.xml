@@ -27,21 +27,20 @@
     </select>
 
     <select id="findMenuIdsByRoleId" resultType="com.xtn.domain.Menu">
-        SELECT
-            DISTINCT
+        SELECT DISTINCT
             trm.menu_id AS id
         FROM
             tb_role_menu trm
-        JOIN
-            tb_role tr
-        ON
-            tr.id=trm.role_id
-        JOIN
-            tb_user_role tur
-        ON
-            tur.role_id=tr.id
-        AND
-            tr.id=#{id}
+        WHERE trm.role_id = #{id}
+    </select>
+
+    <select id="selectRoleIdListByUserId" resultType="java.lang.Long">
+        SELECT
+            ur.role_id
+        FROM
+            tb_user_role ur
+        WHERE
+            ur.user_id = #{id}
     </select>
 
     <delete id="remove">
